@@ -1,9 +1,9 @@
-import { Router } from 'express'
+import { Router, Request, Response } from 'express'
 import { ItemModel, ITEM_CATEGORIES, ITEM_PRIORITIES, ITEM_STATUSES, ITEM_STORAGE_CONDITIONS, ITEM_TYPES, ITEM_UNITS } from '../models/Item'
 
 const router = Router()
 
-router.get('/', async (_req, res) => {
+router.get('/', async (_req: Request, res: Response) => {
   try {
     const items = await ItemModel.find().lean().sort({ createdAt: -1 })
     res.json({ ok: true, data: items })
@@ -12,7 +12,7 @@ router.get('/', async (_req, res) => {
   }
 })
 
-router.post('/', async (req, res) => {
+router.post('/', async (req: Request, res: Response) => {
   try {
     const { name, quantity, unit, category, type, status, priority, source, storageCondition, notes } = req.body || {}
     if (!name || typeof name !== 'string') {
@@ -47,7 +47,7 @@ router.post('/', async (req, res) => {
   }
 })
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', async (req: Request, res: Response) => {
   try {
     const item = await ItemModel.findById(req.params.id).lean()
     if (!item) return res.status(404).json({ ok: false, error: 'not found' })
@@ -57,7 +57,7 @@ router.get('/:id', async (req, res) => {
   }
 })
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', async (req: Request, res: Response) => {
   try {
     const updated = await ItemModel.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true }).lean()
     if (!updated) return res.status(404).json({ ok: false, error: 'not found' })
@@ -67,7 +67,7 @@ router.put('/:id', async (req, res) => {
   }
 })
 
-router.patch('/:id/toggle', async (req, res) => {
+router.patch('/:id/toggle', async (req: Request, res: Response) => {
   try {
     const current = await ItemModel.findById(req.params.id)
     if (!current) return res.status(404).json({ ok: false, error: 'not found' })
@@ -79,7 +79,7 @@ router.patch('/:id/toggle', async (req, res) => {
   }
 })
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', async (req: Request, res: Response) => {
   try {
     const deleted = await ItemModel.findByIdAndDelete(req.params.id).lean()
     if (!deleted) return res.status(404).json({ ok: false, error: 'not found' })
